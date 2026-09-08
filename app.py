@@ -6,7 +6,7 @@ app = Flask(__name__)
 @app.route("/voice", methods=["POST"])
 def voice():
     resp = VoiceResponse()
-    stream = Stream(url="wss://auto-ai-receptionist-websocket.onrender.com/")
+    stream = Stream(url="wss://auto-ai-receptionist-websocket.onrender.com")
     resp.append(stream)
     return Response(str(resp), mimetype="text/xml")
 
