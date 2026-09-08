@@ -6,8 +6,16 @@ app = Flask(__name__)
 @app.route("/voice", methods=["POST"])
 def voice():
     resp = VoiceResponse()
-    stream = Stream(url="wss://echo.websocket.org")
-    resp.append(stream)
+    
+    # Start the Media Stream
+    start = Start()
+    stream = Stream(url="wss://auto-ai-receptionist-websocket.onrender.com")
+    start.append(stream)
+    resp.append(start)
+    
+    # Add a message to confirm the stream is starting
+    resp.say("Media stream started.")
+    
     return Response(str(resp), mimetype="text/xml")
 
 @app.route("/")
