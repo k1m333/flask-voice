@@ -1,26 +1,19 @@
-from flask import Flask, Response
-from twilio.twiml.voice_response import VoiceResponse, Stream
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-@app.route("/voice", methods=["POST"])
-def voice():
-    resp = VoiceResponse()
+@app.route("/book", methods=["POST"])
+def book_appointment():
+    data = request.json or {}
+    params = data.get("message", {}).get("functionCall", {}).get("parameters", {})
     
-    # Start the Media Stream
-    start = Start()
-    stream = Stream(url="wss://auto-ai-receptionist-websocket.onrender.com")
-    start.append(stream)
-    resp.append(start)
+    print(f"📅 Booking: {params}")
     
-    # Add a message to confirm the stream is starting
-    resp.say("Media stream started.")
+    # TODO: Add Google Calendar logic here
     
-    return Response(str(resp), mimetype="text/xml")
-
-@app.route("/")
-def home():
-    return "Flask Route A is running. Use /voice for Twilio webhook."
+    return jsonify({
+        "result": f"I've booked your {params.get('service')} for {params.get('requested_time')}."
+    })
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
